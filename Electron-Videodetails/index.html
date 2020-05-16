@@ -1,0 +1,33 @@
+<head>
+    <title>Video Details app</title>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+</head>
+<body style="display: flex; align-items: center;">
+<section style=" width:100%;text-align: center">
+<h1>Select a Video</h1>
+<form>
+    <div style="padding: 5px">
+        <div class="ui  input">
+            <input type="file" accept="video/*"/>
+        </div>
+    </div>
+    <button type="submit" class="ui secondary button">Get Info</button>
+</form>
+<h3 id="result"></h3>
+</section>
+<script>
+    const electron = require('electron')
+    const {ipcRenderer} = electron
+
+    document.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const {path} = document.querySelector('input').files[0];
+        ipcRenderer.send('video:submit', path);
+    })
+    ipcRenderer.on('video:metadata', (event, duration) => {
+        document.getElementById('result').innerHTML = `video is ${duration} seconds`;
+    })
+</script>
+</body>
